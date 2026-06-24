@@ -13,11 +13,12 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 from urllib.parse import urlencode
 
-DISCORD_CLIENT_ID = os.getenv("DISCORD_CLIENT_ID")
-DISCORD_CLIENT_SECRET = os.getenv("DISCORD_CLIENT_SECRET")
-DISCORD_REDIRECT_URI = os.getenv("DISCORD_REDIRECT_URI")
-DISCORD_GUILD_ID = os.getenv("DISCORD_GUILD_ID")
-DISCORD_PREMIUM_ROLE_ID = os.getenv("DISCORD_PREMIUM_ROLE_ID")
+DISCORD_CLIENT_ID = st.secrets["DISCORD_CLIENT_ID"]
+DISCORD_CLIENT_SECRET = st.secrets["DISCORD_CLIENT_SECRET"]
+DISCORD_REDIRECT_URI = st.secrets["DISCORD_REDIRECT_URI"]
+DISCORD_GUILD_ID = st.secrets["DISCORD_GUILD_ID"]
+DISCORD_PREMIUM_ROLE_ID = st.secrets["DISCORD_PREMIUM_ROLE_ID"]
+DISCORD_ADMIN_ROLE_ID = st.secrets.get("DISCORD_ADMIN_ROLE_ID")
 
 def discord_login_url():
     params = {
@@ -78,7 +79,7 @@ def require_premium():
 
     ALLOWED_ROLE_IDS = [
         DISCORD_PREMIUM_ROLE_ID,
-        os.getenv("DISCORD_ADMIN_ROLE_ID")
+        DISCORD_ADMIN_ROLE_ID
     ]
 
     if not any(role in roles for role in ALLOWED_ROLE_IDS):
