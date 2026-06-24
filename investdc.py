@@ -85,7 +85,7 @@ def require_premium():
         st.error("Pieeja liegta. Šis bots ir tikai Premium lietotājiem.")
         st.stop()
 
-#require_premium()
+require_premium()
 
 st.title("Investīciju analīzes bots")
 
