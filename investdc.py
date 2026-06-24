@@ -65,7 +65,7 @@ def get_discord_roles(access_token):
 def require_premium():
     code = st.query_params.get("code")
 
-    if "discord_token" not in st.session_state:
+    if "discord_roles" not in st.session_state:
         if not code:
             st.title("Gabors Investment Bot")
             st.warning("Pieeja tikai Premium lietotājiem.")
@@ -73,16 +73,21 @@ def require_premium():
             st.stop()
 
         token = get_discord_token(code)
+        roles = get_discord_roles(token)
+
         st.session_state["discord_token"] = token
+        st.session_state["discord_roles"] = roles
 
-    roles = get_discord_roles(st.session_state["discord_token"])
+        st.query_params.clear()
 
-    ALLOWED_ROLE_IDS = [
-        DISCORD_PREMIUM_ROLE_ID,
-        DISCORD_ADMIN_ROLE_ID
-    ]
+    roles = st.session_state.get("discord_roles", [])
 
-    if not any(role in roles for role in ALLOWED_ROLE_IDS):
+    ALLOWED_ROLE_IDS = [DISCORD_PREMIUM_ROLE_ID]
+
+    if DISCORD_ADMIN_ROLE_ID:
+        ALLOWED_ROLE_IDS.append(DISCORD_ADMIN_ROLE_ID)
+
+    if not any(str(role) in [str(r) for r in ALLOWED_ROLE_IDS] for role in roles):
         st.error("Pieeja liegta. Šis bots ir tikai Premium lietotājiem.")
         st.stop()
 
